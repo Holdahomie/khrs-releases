@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>ZakresPro — Dokumentacja postępu prac</title>
+<style>
+  :root{--ink:#15171A;--ink2:#5B6470;--ink3:#8A929C;--line:#E7EAE9;--green:#11A85C;--green-soft:#E6F6EE;--green-ink:#0B7B43;--amber:#B7791F;--amber-soft:#FBF1DD;--red:#B42318;--red-soft:#FBEBE9}
+  *{box-sizing:border-box}body{margin:0;background:#F4F6F5;color:var(--ink);font-family:-apple-system,Segoe UI,Roboto,system-ui,sans-serif;line-height:1.5;padding:18px}
+  .c{max-width:480px;margin:0 auto}
+  .head{background:#101418;color:#fff;border-radius:16px;padding:20px}
+  .head .a{font-size:11px;font-weight:700;color:#34d27f;letter-spacing:.04em}
+  .head h1{font-size:20px;margin:6px 0 2px}.head .s{font-size:13px;color:#aeb6bf}
+  .sec{font-size:12px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.05em;margin:22px 4px 8px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+  img{width:100%;border-radius:10px;display:block;margin:8px 0;background:var(--line)}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:4px 9px;border-radius:999px}
+  .grey{background:#EEF1F0;color:var(--ink3)}.amber{background:var(--amber-soft);color:var(--amber)}.green{background:var(--green-soft);color:var(--green-ink)}.red{background:var(--red-soft);color:var(--red)}
+  .row{display:flex;justify-content:space-between;align-items:center}
+  .note{color:var(--ink);margin:8px 0 0}.meta{font-size:12px;color:var(--ink3);margin-top:6px}
+  .f{font-size:11px;color:var(--ink3);text-align:center;padding:18px}
+</style>
+</head>
+<body>
+<div class="c" id="root"><div class="card">Wczytuję…</div></div>
+<div class="f">Dokumentacja operacyjna · zdjęcia bez danych lokalizacji · link prywatny · powered by KHRS</div>
+<script>
+  const FUNCTION_URL = 'https://auxhgebfsndjnneguprv.functions.supabase.co/public-card'
+  const token = new URLSearchParams(location.search).get('p') || ''
+  const root = document.getElementById('root')
+  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))
+  const money = (a, cur) => a == null ? '—' : new Intl.NumberFormat('pl-PL').format(Number(a)) + ' ' + (cur || 'PLN')
+  const term = (d) => !d ? 'Bez wpływu na termin' : d === 1 ? '+1 dzień' : '+' + d + ' dni'
+  const date = (s) => s ? new Date(s).toLocaleDateString('pl-PL') : ''
+  const STAGE = { before:{l:'Przed',i:'📋',t:'grey'}, in_progress:{l:'W trakcie',i:'🔨',t:'amber'}, issue:{l:'Problem',i:'⚠️',t:'red'}, change:{l:'Zmiana zakresu',i:'🧾',t:'amber'}, materials:{l:'Materiały',i:'📦',t:'amber'}, done:{l:'Zrobione',i:'✅',t:'green'}, handover:{l:'Odbiór',i:'🤝',t:'green'} }
+  const CST = { sent:{l:'wysłana',t:'amber'}, opened:{l:'otwarta',t:'amber'}, accepted:{l:'zaakceptowana',t:'green'}, question:{l:'pytanie',t:'amber'}, declined:{l:'odmowa',t:'red'} }
+  const MST = { planned:'planowane', needed:'do dokupienia', bought:'kupione', used:'zużyte' }
+  const msg = (t) => root.innerHTML = `<div class="card">${esc(t)}</div>`
+
+  function render(d){
+    const st = d.timeline || [], cards = d.cards || [], mats = d.materials || []
+    let html = `<div class="head"><div class="a">ZakresPro · Dokumentacja postępu prac</div><h1>${esc(d.project.name)}</h1><div class="s">${esc(d.project.type||'')}</div></div>`
+    html += `<div class="sec">Oś czasu</div>`
+    if(!st.length) html += `<div class="card"><span class="meta">Brak udostępnionych wpisów.</span></div>`
+    st.forEach(u => { const s = STAGE[u.stage]||STAGE.in_progress
+      html += `<div class="card"><div class="row"><span class="pill ${s.t}">${s.i} ${s.l}</span><span class="meta">${date(u.date)}</span></div>${u.photoUrl?`<img src="${esc(u.photoUrl)}">`:''}<div class="note">${esc(u.note)}</div>${u.author?`<div class="meta">dodał: ${esc(u.author)}</div>`:''}</div>` })
+    if(cards.length){ html += `<div class="sec">Zmiany zakresu</div>`
+      cards.forEach(c => { const s = CST[c.status]||{l:c.status,t:'grey'}
+        html += `<div class="card"><div class="row"><b>${esc(c.title)}</b><span class="pill ${s.t}">${s.l}</span></div><div class="meta">${money(c.price_delta_amount,c.currency)} · ${term(c.term_impact_days)}</div></div>` }) }
+    if(mats.length){ html += `<div class="sec">Materiały</div><div class="card">` + mats.map(m=>`<div class="row" style="padding:5px 0"><span>${esc(m.name)}</span><span class="meta">${MST[m.status]||''}</span></div>`).join('') + `</div>` }
+    root.innerHTML = html
+  }
+  async function load(){
+    if(!token) return msg('Nieprawidłowy adres.')
+    try{ const r = await fetch(FUNCTION_URL + '?p=' + encodeURIComponent(token)); const d = await r.json()
+      if(!d.ok) return msg('Link wygasł lub jest nieaktywny. Poproś wykonawcę o nowy.')
+      render(d)
+    }catch(e){ msg('Brak połączenia. Sprawdź internet i odśwież.') }
+  }
+  load()
+</script>
+</body>
+</html>
