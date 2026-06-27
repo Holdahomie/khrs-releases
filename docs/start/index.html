@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="pl">
+<!-- USTAW SWÓJ NUMER: w całym pliku zamień 48500000000 na swój WhatsApp (format: 48XXXXXXXXX, bez + i spacji) -->
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="ZakresPro - kontrola zakresu robót dla ekip wykończeniowych. Zdjęcie, karta zmiany, link dla klienta, raport. Bez chaosu z WhatsAppa." />
+<title>ZakresPro - kontrola zakresu robót dla ekip wykończeniowych</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#F4F6F5;--surface:#fff;--ink:#15171A;--ink2:#5B6470;--ink3:#8A929C;--line:#E7EAE9;--green:#11A85C;--green-soft:#E6F6EE;--green-ink:#0B7B43;--amber:#B7791F;--amber-soft:#FBF1DD;--shadow:0 1px 2px rgba(20,23,26,.04),0 8px 24px rgba(20,23,26,.06)}
+  *{box-sizing:border-box}html,body{margin:0}body{font-family:Inter,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 22px}
+  a{color:inherit}
+  .top{position:sticky;top:0;z-index:10;background:rgba(244,246,245,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .top .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
+  .brand{font-weight:800;font-size:20px;letter-spacing:-.02em}.brand .u{color:var(--green)}.brand small{font-weight:600;font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-left:6px}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font-family:inherit;font-weight:600;font-size:15px;border-radius:12px;padding:13px 20px;text-decoration:none;transition:.15s}
+  .btn-p{background:var(--green);color:#fff;box-shadow:0 6px 16px rgba(17,168,92,.26)}.btn-p:hover{background:#0F9A54;transform:translateY(-1px)}
+  .btn-g{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+  .btn-sm{padding:9px 15px;font-size:13.5px;border-radius:10px}
+  .hero{padding:70px 0 34px}
+  .eye{display:inline-flex;align-items:center;gap:8px;background:var(--green-soft);color:var(--green-ink);font-weight:600;font-size:13px;padding:7px 13px;border-radius:999px;margin-bottom:22px}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+  h1{font-size:clamp(32px,5.4vw,54px);line-height:1.05;letter-spacing:-.03em;font-weight:800;margin:0 0 18px;max-width:15ch}
+  .lead{font-size:clamp(17px,2.2vw,20px);color:var(--ink2);max-width:50ch;margin:0 0 28px}
+  .cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .note{color:var(--ink3);font-size:13.5px}
+  .trust{display:flex;gap:26px;flex-wrap:wrap;margin-top:36px;padding-top:26px;border-top:1px solid var(--line)}
+  .trust div{font-size:13.5px;color:var(--ink2)}.trust b{display:block;font-size:21px;color:var(--ink);font-weight:800;letter-spacing:-.02em}
+  section{padding:34px 0}
+  .sh{max-width:48ch;margin:0 auto 28px;text-align:center}
+  .sh h2{font-size:clamp(24px,3.4vw,33px);letter-spacing:-.02em;margin:0 0 10px;font-weight:800}.sh p{color:var(--ink2);margin:0;font-size:16.5px}
+  .kick{font-weight:600;color:var(--green-ink);font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}@media(max-width:760px){.steps{grid-template-columns:1fr}}
+  .step{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+  .step .n{width:34px;height:34px;border-radius:10px;background:var(--green-soft);color:var(--green-ink);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+  .step h3{margin:12px 0 6px;font-size:17px;letter-spacing:-.01em}.step p{margin:0;color:var(--ink2);font-size:14.5px}
+  .feat{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}@media(max-width:680px){.feat{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+  .card .ic{width:42px;height:42px;border-radius:11px;background:var(--green-soft);display:flex;align-items:center;justify-content:center;font-size:20px}
+  .card h3{margin:12px 0 6px;font-size:17px}.card p{margin:0;color:var(--ink2);font-size:14.5px}
+  .strip{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:30px;box-shadow:var(--shadow);display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:center}@media(max-width:760px){.strip{grid-template-columns:1fr}}
+  .strip h2{margin:0 0 8px;font-size:25px;letter-spacing:-.02em}.strip p{margin:0;color:var(--ink2)}
+  .qa{display:grid;gap:12px}.q{font-weight:700;margin:0 0 4px}.a{color:var(--ink2);margin:0;font-size:14.5px}
+  .qitem{border-top:1px solid var(--line);padding-top:14px}
+  .band{background:#101418;border-radius:24px;padding:46px 32px;text-align:center;color:#fff;margin:8px 0}
+  .band h2{font-size:clamp(24px,3.4vw,33px);margin:0 0 10px;letter-spacing:-.02em}.band p{color:#AEB6BF;margin:0 auto 22px;max-width:48ch}
+  .band .btn-p{box-shadow:0 8px 22px rgba(17,168,92,.4)}
+  footer{padding:40px 0 60px;text-align:center;color:var(--ink3);font-size:13px}
+  .pill{display:inline-block;background:var(--amber-soft);color:var(--amber);font-size:12px;font-weight:700;padding:5px 11px;border-radius:999px;margin-bottom:14px}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="wrap">
+  <div class="brand">ZakresPro<span class="u">_</span><small>by KHRS</small></div>
+  <a href="https://wa.me/48500000000?text=Chc%C4%99%20przetestowa%C4%87%20ZakresPro%20na%20pilota%C5%BCu" class="btn btn-p btn-sm">Chcę pilotaż</a>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <span class="eye"><span class="dot"></span> Kontrola zakresu robót dla ekip wykończeniowych</span>
+  <h1>Nie trać pieniędzy przez ustalenia, które giną na WhatsAppie.</h1>
+  <p class="lead">ZakresPro zamienia chaos z WhatsAppa w zdjęcia, karty zmian, potwierdzenia klienta i raport - w 3 kliknięcia z telefonu. Klient nic nie instaluje.</p>
+  <div class="cta">
+    <a href="https://wa.me/48500000000?text=Chc%C4%99%20przetestowa%C4%87%20ZakresPro%20na%20pilota%C5%BCu" class="btn btn-p">Chcę przetestować (pilotaż)</a>
+    <a href="#jak" class="btn btn-g">Zobacz, jak działa</a>
+  </div>
+  <p class="note" style="margin-top:12px">Apka na Androida w przygotowaniu - dołącz do pilotażu i dostań ją pierwszy.</p>
+  <div class="trust">
+    <div><b>500-3000 zł</b> tyle potrafi kosztować jedna niedogadana zmiana zakresu</div>
+    <div><b>3 kliknięcia</b> zdjęcie, opis, wyślij link klientowi</div>
+    <div><b>0 logowania</b> klient otwiera link i potwierdza</div>
+  </div>
+</div></header>
+
+<section><div class="wrap">
+  <div class="strip">
+    <div>
+      <div class="kick">Problem</div>
+      <h2>„Masz zdjęcia? Super. A potwierdzenie, że było drożej?"</h2>
+      <p>Skułeś kafle i pod spodem wyszło gnicie podłogi. To dodatkowy koszt. Piszesz na WhatsAppie - klient czeka, kwestionuje, zapomina. Za dwa tygodnie „nie wiedział, że to było uzgodnione".</p>
+    </div>
+    <div class="qa">
+      <div><span style="color:var(--green);font-weight:800">✓</span> Jedno miejsce, gdzie żyją zakres, zmiany i potwierdzenia.</div>
+      <div><span style="color:var(--green);font-weight:800">✓</span> Każda zmiana = zdjęcie + koszt + termin + kto potwierdził i kiedy.</div>
+      <div><span style="color:var(--green);font-weight:800">✓</span> Po pół roku otwierasz robotę i wszystko jest na miejscu.</div>
+    </div>
+  </div>
+</div></section>
+
+<section id="jak"><div class="wrap">
+  <div class="sh"><div class="kick">Jak to działa</div><h2>Trzy kliknięcia z telefonu - gotowe</h2></div>
+  <div class="steps">
+    <div class="step"><div class="n">1</div><h3>Zakres przed robotą</h3><p>Tworzysz robotę: nazwa, typ, co jest w cenie. Klient wie, na co się pisze, zanim zaczniesz.</p></div>
+    <div class="step"><div class="n">2</div><h3>Karta Zmiany Zakresu</h3><p>Wyszło coś dodatkowego? Zdjęcie, opis, koszt, wpływ na termin. Karta gotowa w minutę.</p></div>
+    <div class="step"><div class="n">3</div><h3>Link dla klienta</h3><p>Wysyłasz przez WhatsApp. Klient klika i potwierdza - bez konta i bez apki. Masz dowód z datą.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sh"><div class="kick">Co dostajesz</div><h2>Żywa dokumentacja całej roboty</h2></div>
+  <div class="feat">
+    <div class="card"><div class="ic">🧾</div><h3>Karta Zmiany Zakresu</h3><p>Tu są pieniądze. Każda praca poza zakresem ma zdjęcie, koszt i potwierdzenie klienta. Koniec dopłat, których „klient nie pamięta".</p></div>
+    <div class="card"><div class="ic">📈</div><h3>Status roboty dla klienta/inwestora</h3><p>Jeden link pokazuje postęp, zdjęcia i zmiany. Mniej telefonów „co tam słychać?". Idealne, gdy ktoś prowadzi kilka lokalizacji.</p></div>
+    <div class="card"><div class="ic">👷</div><h3>Link dla pracownika</h3><p>Podwykonawca dodaje zdjęcie i opis z roboty - bez zakładania konta. Ty zatwierdzasz, co ma trafić do dokumentacji.</p></div>
+    <div class="card"><div class="ic">⭐</div><h3>Raport i portfolio</h3><p>Zdjęcia przed/po, historia zmian, Twoje logo. Wyślesz klientowi albo wrzucisz na Facebooka jako portfolio.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sh"><div class="kick">Najczęstsze pytania</div><h2>Pytacie wprost - odpowiadamy wprost</h2></div>
+  <div class="card" style="padding:24px">
+    <div class="qa">
+      <div class="qitem" style="border-top:0;padding-top:0"><p class="q">Mam WhatsAppa. Po co mi to?</p><p class="a">ZakresPro nie zastępuje WhatsAppa - dalej przez niego wysyłasz. Tyle że zamiast 30 wiadomości wklejasz jeden link, a Ty masz historię, której WhatsApp nie pamięta po pół roku.</p></div>
+      <div class="qitem"><p class="q">Mam umowę albo aneks. To mi wystarczy.</p><p class="a">Super, masz dobrą zasadę. ZakresPro nie zastępuje umów - pilnuje procesu: zdjęcie, opis, koszt, termin, kto potwierdził i kiedy. Twoje aneksy zostają u Ciebie.</p></div>
+      <div class="qitem"><p class="q">Czy zdjęcia mieszkań są bezpieczne?</p><p class="a">Usuwamy dane GPS i czas ze zdjęć (EXIF). Linki dla klienta to tajne tokeny, nie do wyszukania w Google, mogą wygasać. Nie wymagamy adresu ani telefonu klienta.</p></div>
+      <div class="qitem"><p class="q">Czy to ochrona prawna?</p><p class="a">Nie. ZakresPro to dokumentacja operacyjna, nie legaltech. Nie generujemy umów ani nie obiecujemy ochrony w sporach. Zapis: kto, co, ile, kiedy, kto potwierdził - co z tym zrobisz, to Twoja decyzja.</p></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="pilotaz"><div class="wrap">
+  <div class="band">
+    <span class="pill">Szukamy 5 ekip do pilotażu</span>
+    <h2>Przetestuj na jednej realnej robocie</h2>
+    <p>Founder Plan: pomożemy ustawić pierwszą robotę, a Ty oceniasz, czy zostaje. Dla pierwszych ekip - warunki preferencyjne. Bez zobowiązań, bez podawania danych klientów.</p>
+    <a href="https://wa.me/48500000000?text=Chc%C4%99%20do%C5%82%C4%85czy%C4%87%20do%20pilota%C5%BCu%20ZakresPro" class="btn btn-p">Napisz na WhatsApp - chcę pilotaż</a>
+  </div>
+</div></section>
+
+<footer>
+  <div class="brand" style="justify-content:center;margin-bottom:8px">ZakresPro<span class="u">_</span></div>
+  Dokumentacja operacyjna dla ekip wykończeniowych - nie porada prawna.<br>
+  Zdjęcia bez danych lokalizacji · linki prywatne · © ZakresPro · powered by <b>KHRS</b>
+</footer>
+
+</body>
+</html>
