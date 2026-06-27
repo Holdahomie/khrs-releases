@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
-<title>ZakresPro — Karta Zmiany</title>
+<title>ZakresPro - Karta Zmiany</title>
 <style>
   :root{--ink:#15171A;--ink2:#5B6470;--line:#E7EAE9;--green:#11A85C;--amber:#B7791F}
   *{box-sizing:border-box}body{margin:0;background:#F4F6F5;color:var(--ink);font-family:-apple-system,Segoe UI,Roboto,system-ui,sans-serif;line-height:1.5;padding:18px}
@@ -28,7 +28,7 @@
   const t = new URLSearchParams(location.search).get('t') || ''
   const root = document.getElementById('root')
   const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))
-  const money = (a, cur) => a == null ? '—' : new Intl.NumberFormat('pl-PL').format(Number(a)) + ' ' + (cur || 'PLN')
+  const money = (a, cur) => a == null ? '-' : new Intl.NumberFormat('pl-PL').format(Number(a)) + ' ' + (cur || 'PLN')
   const term = (d) => !d ? 'Bez wpływu na termin' : d === 1 ? '+1 dzień' : '+' + d + ' dni'
 
   function msg(title, text){ root.innerHTML = `<div class="h"><div class="a">ZakresPro</div><h1>${esc(title)}</h1></div><div class="b"><p class="note">${esc(text)}</p></div>` }
@@ -61,10 +61,10 @@
       const r = await fetch(FUNCTION_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ t, decision, comment }) })
       const j = await r.json()
       if(j.ok){
-        const label = decision === 'accept' ? 'Dziękujemy — zmiana zaakceptowana.' : decision === 'question' ? 'Dziękujemy — wykonawca odezwie się w sprawie Twojego pytania.' : 'Dziękujemy — odpowiedź zapisana.'
+        const label = decision === 'accept' ? 'Dziękujemy - zmiana zaakceptowana.' : decision === 'question' ? 'Dziękujemy - wykonawca odezwie się w sprawie Twojego pytania.' : 'Dziękujemy - odpowiedź zapisana.'
         msg('Zapisano', label)
       } else if(j.reason === 'already'){
-        msg('Decyzja została już zapisana', 'Dziękujemy — Twoja odpowiedź jest już u wykonawcy.')
+        msg('Decyzja została już zapisana', 'Dziękujemy - Twoja odpowiedź jest już u wykonawcy.')
       } else {
         msg('Coś poszło nie tak', 'Spróbuj ponownie za chwilę.')
       }
@@ -77,7 +77,7 @@
       const r = await fetch(FUNCTION_URL + '?t=' + encodeURIComponent(t))
       const d = await r.json()
       if(!d.ok) return msg('Link wygasł lub jest nieaktywny', 'Poproś wykonawcę o nowy link.')
-      if(d.decided) return msg('Decyzja została już zapisana', 'Dziękujemy — Twoja odpowiedź jest już u wykonawcy.')
+      if(d.decided) return msg('Decyzja została już zapisana', 'Dziękujemy - Twoja odpowiedź jest już u wykonawcy.')
       renderCard(d)
     }catch(e){ msg('Brak połączenia', 'Sprawdź internet i odśwież stronę.') }
   }
