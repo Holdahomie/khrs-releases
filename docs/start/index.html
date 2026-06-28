@@ -56,7 +56,7 @@
 
 <div class="top"><div class="wrap">
   <div class="brand">ZakresPro<span class="u">_</span><small>by KHRS</small></div>
-  <a href="https://wa.me/48796163614?text=Chc%C4%99%20przetestowa%C4%87%20ZakresPro%20na%20pilota%C5%BCu" class="btn btn-p btn-sm">Chcę pilotaż</a>
+  <a href="https://zakrespro.pl/apk/zakrespro.apk" class="btn btn-p btn-sm dl">Pobierz aplikację</a>
 </div></div>
 
 <header class="hero"><div class="wrap">
@@ -64,10 +64,10 @@
   <h1>Nie trać pieniędzy przez ustalenia, które giną na WhatsAppie.</h1>
   <p class="lead">ZakresPro zamienia chaos z WhatsAppa w zdjęcia, karty zmian, potwierdzenia klienta i raport - w 3 kliknięcia z telefonu. Klient nic nie instaluje.</p>
   <div class="cta">
-    <a href="https://wa.me/48796163614?text=Chc%C4%99%20przetestowa%C4%87%20ZakresPro%20na%20pilota%C5%BCu" class="btn btn-p">Chcę przetestować (pilotaż)</a>
-    <a href="#jak" class="btn btn-g">Zobacz, jak działa</a>
+    <a href="https://zakrespro.pl/apk/zakrespro.apk" class="btn btn-p dl">Pobierz aplikację na Androida</a>
+    <a href="#jak" class="btn btn-g">Jak to działa</a>
   </div>
-  <p class="note" style="margin-top:12px">Apka na Androida w przygotowaniu - dołącz do pilotażu i dostań ją pierwszy.</p>
+  <p class="note" style="margin-top:12px"><b>Pierwsza robota za darmo. Bez limitu czasu.</b> Kolejne roboty w planie Core. Android - instalacja z pliku (zezwól „z nieznanych źródeł").</p>
   <div class="trust">
     <div><b>500-3000 zł</b> tyle potrafi kosztować jedna niedogadana zmiana zakresu</div>
     <div><b>3 kliknięcia</b> zdjęcie, opis, wyślij link klientowi</div>
@@ -121,12 +121,15 @@
   </div>
 </div></section>
 
-<section id="pilotaz"><div class="wrap">
+<section id="start"><div class="wrap">
   <div class="band">
-    <span class="pill">Szukamy 5 ekip do pilotażu</span>
-    <h2>Przetestuj na jednej realnej robocie</h2>
-    <p>Founder Plan: pomożemy ustawić pierwszą robotę, a Ty oceniasz, czy zostaje. Dla pierwszych ekip - warunki preferencyjne. Bez zobowiązań, bez podawania danych klientów.</p>
-    <a href="https://wa.me/48796163614?text=Chc%C4%99%20do%C5%82%C4%85czy%C4%87%20do%20pilota%C5%BCu%20ZakresPro" class="btn btn-p">Napisz na WhatsApp - chcę pilotaż</a>
+    <span class="pill">Pierwsza robota za darmo</span>
+    <h2>Zacznij od jednej roboty - bez limitu czasu</h2>
+    <p>Pobierz aplikację, załóż konto i udokumentuj pierwszą robotę za darmo. Kolejne roboty w planie Core. Bez podawania danych klientów.</p>
+    <div class="cta" style="justify-content:center">
+      <a href="https://zakrespro.pl/apk/zakrespro.apk" class="btn btn-p dl">Pobierz aplikację na Androida</a>
+      <a href="https://wa.me/48796163614?text=Cze%C5%9B%C4%87%2C%20chc%C4%99%20zacz%C4%85%C4%87%20z%20ZakresPro" class="btn btn-g wa">Pomożemy ustawić pierwszą robotę</a>
+    </div>
   </div>
 </div></section>
 
@@ -136,5 +139,17 @@
   Zdjęcia bez danych lokalizacji · linki prywatne · © ZakresPro · powered by <b>KHRS</b>
 </footer>
 
+<script>
+  const FN = 'https://auxhgebfsndjnneguprv.functions.supabase.co/public-card'
+  function track(ev){
+    try{
+      const b = JSON.stringify({ event: ev, platform: 'web' })
+      if (navigator.sendBeacon) navigator.sendBeacon(FN, new Blob([b], { type: 'application/json' }))
+      else fetch(FN, { method:'POST', headers:{'Content-Type':'application/json'}, body:b, keepalive:true })
+    }catch(e){}
+  }
+  document.querySelectorAll('.dl').forEach(a => a.addEventListener('click', () => track('landing_download_clicked')))
+  document.querySelectorAll('.wa').forEach(a => a.addEventListener('click', () => track('landing_whatsapp_clicked')))
+</script>
 </body>
 </html>
