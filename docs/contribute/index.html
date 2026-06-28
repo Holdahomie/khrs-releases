@@ -26,12 +26,13 @@
 </head>
 <body>
 <div class="c" id="root"><div class="s">Wczytuję…</div></div>
-<div class="f">Dodajesz update do roboty · zdjęcia bez danych lokalizacji · powered by KHRS</div>
+<div class="f">Dodajesz update do roboty · zdjęcia bez danych lokalizacji · powered by ZakresPro / KHRS</div>
 <script>
   const FUNCTION_URL = 'https://auxhgebfsndjnneguprv.functions.supabase.co/public-card'
   const token = new URLSearchParams(location.search).get('c') || ''
   const root = document.getElementById('root')
   const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))
+  const safeUrl = (u) => /^https?:\/\//i.test(String(u || '')) ? String(u) : ''
   const STAGES = [['in_progress','🔨 W trakcie'],['issue','⚠️ Problem'],['done','✅ Zrobione'],['materials','📦 Materiały'],['before','📋 Przed'],['handover','🤝 Odbiór']]
   let stage = 'in_progress', photo = null
 
@@ -45,9 +46,13 @@
   }
   const msg = (t) => root.innerHTML = `<div class="a">ZakresPro</div><h1>${esc(t)}</h1>`
 
-  function form(projectName){
+  function form(projectName, co){
+    co = co || {}
+    const head = co.name
+      ? `${safeUrl(co.logo_url) ? `<img src="${esc(safeUrl(co.logo_url))}" alt="" style="width:38px;height:38px;border-radius:8px;display:block;margin-bottom:6px">` : ''}<div class="a">${esc(co.name)} · Dodaj update</div>`
+      : `<div class="a">ZakresPro · Dodaj update</div>`
     root.innerHTML = `
-      <div class="a">ZakresPro · Dodaj update</div><h1>${esc(projectName)}</h1>
+      ${head}<h1>${esc(projectName)}</h1>
       <div class="s">Dodaj postęp do tej roboty. Pojawi się w dokumentacji po zatwierdzeniu przez wykonawcę.</div>
       <label>Zdjęcie</label>
       <div class="pick" id="pick"><span style="font-size:22px">📷</span><span>Zrób zdjęcie lub wybierz</span></div>
@@ -80,6 +85,7 @@
         body: JSON.stringify({ stage, note, author_name, photoBase64: photo, material: mat ? { name: mat } : null }) })
       const j = await r.json()
       if(j.ok) msg('Dodano update. Pojawi się w dokumentacji po zatwierdzeniu.')
+      else if(j.reason === 'read_only') msg('Dodawanie chwilowo wstrzymane. Skontaktuj się z wykonawcą.')
       else msg('Nie udało się. Link może być nieaktywny.')
     }catch(e){ btn.disabled=false; btn.textContent='Wyślij update'; alert('Brak połączenia, spróbuj ponownie') }
   }
@@ -87,7 +93,7 @@
     if(!token) return msg('Nieprawidłowy adres.')
     try{ const r = await fetch(FUNCTION_URL + '?c=' + encodeURIComponent(token)); const d = await r.json()
       if(!d.ok) return msg('Link wygasł lub jest nieaktywny.')
-      form(d.project.name)
+      form(d.project.name, d.company)
     }catch(e){ msg('Brak połączenia. Odśwież stronę.') }
   }
   load()
