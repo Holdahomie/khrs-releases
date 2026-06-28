@@ -22,12 +22,13 @@
 </head>
 <body>
 <div class="c" id="root"><div class="b"><p class="note">Wczytuję…</p></div></div>
-<div class="f">Dokumentacja operacyjna · zdjęcia bez danych lokalizacji · link prywatny · powered by KHRS</div>
+<div class="f">Dokumentacja operacyjna · zdjęcia bez danych lokalizacji · link prywatny · powered by ZakresPro / KHRS</div>
 <script>
   const FUNCTION_URL = 'https://auxhgebfsndjnneguprv.functions.supabase.co/public-card'
   const t = new URLSearchParams(location.search).get('t') || ''
   const root = document.getElementById('root')
   const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))
+  const safeUrl = (u) => /^https?:\/\//i.test(String(u || '')) ? String(u) : ''
   const money = (a, cur) => a == null ? '-' : new Intl.NumberFormat('pl-PL').format(Number(a)) + ' ' + (cur || 'PLN')
   const term = (d) => !d ? 'Bez wpływu na termin' : d === 1 ? '+1 dzień' : '+' + d + ' dni'
 
@@ -36,8 +37,15 @@
   function renderCard(d){
     const c = d.card
     const why = c.discovery_explanation ? `<p class="lbl">Dlaczego wyszło to dopiero teraz?</p><p>${esc(c.discovery_explanation)}</p>` : ''
+    const co = d.company || {}
+    const coContact = [co.phone, co.email].filter(Boolean).map(esc).join(' · ')
     root.innerHTML = `
-      <div class="h"><div class="a">ZakresPro · Karta Zmiany Zakresu</div><h1>Czeka na Twoją odpowiedź</h1></div>
+      <div class="h">
+        ${safeUrl(co.logo_url) ? `<img src="${esc(safeUrl(co.logo_url))}" alt="" style="width:40px;height:40px;border-radius:8px;margin:0 0 6px">` : ''}
+        <div class="a">${esc(co.name || 'ZakresPro')} · Karta Zmiany Zakresu</div>
+        <h1>Czeka na Twoją odpowiedź</h1>
+        ${coContact ? `<p class="muted" style="font-size:12px;margin:4px 0 0">${coContact}</p>` : ''}
+      </div>
       <div class="b">
         ${d.photoUrl ? `<img src="${esc(d.photoUrl)}" alt="zdjęcie">` : ''}
         <p><b>${esc(c.title)}</b></p>
