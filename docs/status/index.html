@@ -4,32 +4,41 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
-<title>ZakresPro - Dokumentacja postępu prac</title>
+<title>ZakresPro - Panel roboty</title>
 <style>
   :root{--ink:#15171A;--ink2:#5B6470;--ink3:#8A929C;--line:#E7EAE9;--green:#11A85C;--green-soft:#E6F6EE;--green-ink:#0B7B43;--amber:#B7791F;--amber-soft:#FBF1DD;--red:#B42318;--red-soft:#FBEBE9}
-  *{box-sizing:border-box}body{margin:0;background:#F4F6F5;color:var(--ink);font-family:-apple-system,Segoe UI,Roboto,system-ui,sans-serif;line-height:1.5;padding:18px}
-  .c{max-width:480px;margin:0 auto}
-  .head{background:#101418;color:#fff;border-radius:16px;padding:20px}
-  .head .a{font-size:11px;font-weight:700;color:#34d27f;letter-spacing:.04em}
-  .head h1{font-size:20px;margin:6px 0 2px}.head .s{font-size:13px;color:#aeb6bf}
-  .sec{font-size:12px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.05em;margin:22px 4px 8px}
+  *{box-sizing:border-box}body{margin:0;background:#F4F6F5;color:var(--ink);font-family:-apple-system,Segoe UI,Roboto,system-ui,sans-serif;line-height:1.5;padding:16px}
+  .c{max-width:520px;margin:0 auto}
+  .head{background:#101418;color:#fff;border-radius:16px;padding:18px;display:flex;gap:12px;align-items:center}
+  .head img.logo{width:46px;height:46px;border-radius:10px;object-fit:cover;background:#222}
+  .head .co{font-size:15px;font-weight:700}.head .ct{font-size:12px;color:#aeb6bf}
+  .a{font-size:10.5px;font-weight:700;color:#34d27f;letter-spacing:.05em;text-transform:uppercase}
+  h1{font-size:19px;margin:14px 2px 2px}.sub{font-size:13px;color:var(--ink2);margin:0 2px 4px}
+  .tabs{display:flex;gap:6px;overflow-x:auto;margin:14px 0 6px;padding-bottom:4px}
+  .tab{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 13px;font-size:13px;font-weight:600;color:var(--ink2);cursor:pointer}
+  .tab.on{background:var(--green);border-color:var(--green);color:#fff}
   .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
-  img{width:100%;border-radius:10px;display:block;margin:8px 0;background:var(--line)}
+  img.ph{width:100%;border-radius:10px;display:block;margin:8px 0;background:var(--line)}
   .pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:4px 9px;border-radius:999px}
   .grey{background:#EEF1F0;color:var(--ink3)}.amber{background:var(--amber-soft);color:var(--amber)}.green{background:var(--green-soft);color:var(--green-ink)}.red{background:var(--red-soft);color:var(--red)}
-  .row{display:flex;justify-content:space-between;align-items:center}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
   .note{color:var(--ink);margin:8px 0 0}.meta{font-size:12px;color:var(--ink3);margin-top:6px}
-  .f{font-size:11px;color:var(--ink3);text-align:center;padding:18px}
+  .btn{border:0;border-radius:11px;padding:11px 14px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+  .btn-g{background:var(--green);color:#fff}.btn-o{background:#fff;border:1px solid var(--line);color:var(--ink)}.btn-r{background:#fff;border:1px solid #F1C9C4;color:var(--red)}
+  .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .f{font-size:11px;color:var(--ink3);text-align:center;padding:16px}
+  .hide{display:none}
 </style>
 </head>
 <body>
 <div class="c" id="root"><div class="card">Wczytuję…</div></div>
-<div class="f">Dokumentacja operacyjna · zdjęcia bez danych lokalizacji · link prywatny · powered by KHRS</div>
+<div class="f">Dokumentacja operacyjna · zdjęcia bez danych lokalizacji · link prywatny · powered by <b>ZakresPro / KHRS</b></div>
 <script>
   const FUNCTION_URL = 'https://auxhgebfsndjnneguprv.functions.supabase.co/public-card'
   const token = new URLSearchParams(location.search).get('p') || ''
   const root = document.getElementById('root')
-  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
+  const safeUrl = (u) => /^https?:\/\//i.test(String(u || '')) ? String(u) : ''
   const money = (a, cur) => a == null ? '-' : new Intl.NumberFormat('pl-PL').format(Number(a)) + ' ' + (cur || 'PLN')
   const term = (d) => !d ? 'Bez wpływu na termin' : d === 1 ? '+1 dzień' : '+' + d + ' dni'
   const date = (s) => s ? new Date(s).toLocaleDateString('pl-PL') : ''
@@ -37,25 +46,94 @@
   const CST = { sent:{l:'wysłana',t:'amber'}, opened:{l:'otwarta',t:'amber'}, accepted:{l:'zaakceptowana',t:'green'}, question:{l:'pytanie',t:'amber'}, declined:{l:'odmowa',t:'red'} }
   const MST = { planned:'planowane', needed:'do dokupienia', bought:'kupione', used:'zużyte' }
   const msg = (t) => root.innerHTML = `<div class="card">${esc(t)}</div>`
+  let D = null, tab = 'zakres', busy = false
 
-  function render(d){
-    const st = d.timeline || [], cards = d.cards || [], mats = d.materials || []
-    let html = `<div class="head"><div class="a">ZakresPro · Dokumentacja postępu prac</div><h1>${esc(d.project.name)}</h1><div class="s">${esc(d.project.type||'')}</div></div>`
-    html += `<div class="sec">Oś czasu</div>`
-    if(!st.length) html += `<div class="card"><span class="meta">Brak udostępnionych wpisów.</span></div>`
-    st.forEach(u => { const s = STAGE[u.stage]||STAGE.in_progress
-      html += `<div class="card"><div class="row"><span class="pill ${s.t}">${s.i} ${s.l}</span><span class="meta">${date(u.date)}</span></div>${u.photoUrl?`<img src="${esc(u.photoUrl)}">`:''}<div class="note">${esc(u.note)}</div>${u.author?`<div class="meta">dodał: ${esc(u.author)}</div>`:''}</div>` })
-    if(cards.length){ html += `<div class="sec">Zmiany zakresu</div>`
-      cards.forEach(c => { const s = CST[c.status]||{l:c.status,t:'grey'}
-        html += `<div class="card"><div class="row"><b>${esc(c.title)}</b><span class="pill ${s.t}">${s.l}</span></div><div class="meta">${money(c.price_delta_amount,c.currency)} · ${term(c.term_impact_days)}</div></div>` }) }
-    if(mats.length){ html += `<div class="sec">Materiały</div><div class="card">` + mats.map(m=>`<div class="row" style="padding:5px 0"><span>${esc(m.name)}</span><span class="meta">${MST[m.status]||''}</span></div>`).join('') + `</div>` }
-    root.innerHTML = html
+  async function post(payload){
+    const r = await fetch(FUNCTION_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ p: token, ...payload }) })
+    return r.json()
+  }
+  async function confirmScope(){
+    if(busy) return
+    const name = prompt('Twoje imię i nazwisko (potwierdzenie zakresu):')
+    if(!name) return
+    busy = true
+    const j = await post({ action:'confirm_scope', name }).catch(()=>({ok:false}))
+    busy = false
+    if(j.ok){ await load() } else alert(j.reason === 'already' ? 'Zakres został już potwierdzony.' : 'Nie udało się. Odśwież i spróbuj ponownie.')
+  }
+  async function decide(cardId, decision){
+    if(busy) return
+    let comment = null
+    if(decision !== 'accept'){ comment = prompt(decision === 'question' ? 'Twoje pytanie (opcjonalnie):' : 'Powód (opcjonalnie):') }
+    busy = true
+    const j = await post({ action:'decide', cardId, decision, comment }).catch(()=>({ok:false}))
+    busy = false
+    if(j.ok){ await load() } else alert(j.reason === 'already' ? 'Decyzja została już podjęta.' : 'Nie udało się. Odśwież i spróbuj ponownie.')
+  }
+  window._zp = { confirmScope, decide, setTab: (t)=>{ tab=t; render() } }
+
+  function header(){
+    const co = D.company || {}, p = D.project || {}
+    const logoSrc = safeUrl(co.logo_url)
+    const logo = logoSrc ? `<img class="logo" src="${esc(logoSrc)}" alt="">` : ''
+    const contact = [co.phone, co.email, co.website].filter(Boolean).map(esc).join(' · ')
+    return `<div class="head">${logo}<div><div class="a">Dokumentacja roboty</div><div class="co">${esc(co.name || 'ZakresPro')}</div>${contact?`<div class="ct">${contact}</div>`:''}</div></div>
+      <h1>${esc(p.name)}</h1>${p.type?`<p class="sub">${esc(p.type)}</p>`:''}${p.description?`<p class="sub">${esc(p.description)}</p>`:''}`
+  }
+  function tabsBar(){
+    const items = [['zakres','Zakres'],['postep','Postęp'],['zmiany','Zmiany'],['materialy','Materiały'],['raport','Raport']]
+    return `<div class="tabs">${items.map(([k,l])=>`<div class="tab ${tab===k?'on':''}" onclick="_zp.setTab('${k}')">${l}</div>`).join('')}</div>`
+  }
+  function viewZakres(){
+    const p = D.project || {}, sc = D.scope || []
+    let h = ''
+    if(p.scope_confirmed_at) h += `<div class="card"><span class="pill green">✓ Zakres potwierdzony${p.scope_confirmed_by_name?': '+esc(p.scope_confirmed_by_name):''}</span><div class="meta">${date(p.scope_confirmed_at)}</div></div>`
+    if(!sc.length) h += `<div class="card"><span class="meta">Brak pozycji zakresu.</span></div>`
+    else h += `<div class="card">${sc.map(s=>`<div class="row" style="padding:7px 0;border-top:1px solid var(--line)"><span>${esc(s.text)}</span><span class="pill ${s.in_price?'green':'amber'}">${s.in_price?'w cenie':'poza zakresem'}</span></div>`).join('')}</div>`
+    if(!p.scope_confirmed_at && sc.length) h += `<div class="acts"><button class="btn btn-g" onclick="_zp.confirmScope()">Potwierdzam zakres</button></div>`
+    return h
+  }
+  function viewPostep(){
+    const st = D.timeline || []
+    if(!st.length) return `<div class="card"><span class="meta">Brak udostępnionych wpisów.</span></div>`
+    return st.map(u=>{ const s = STAGE[u.stage]||STAGE.in_progress
+      return `<div class="card"><div class="row"><span class="pill ${s.t}">${s.i} ${s.l}</span><span class="meta">${date(u.date)}</span></div>${u.photoUrl?`<img class="ph" src="${esc(u.photoUrl)}">`:''}<div class="note">${esc(u.note)}</div>${u.author?`<div class="meta">dodał: ${esc(u.author)}</div>`:''}</div>` }).join('')
+  }
+  function viewZmiany(){
+    const cards = D.cards || []
+    if(!cards.length) return `<div class="card"><span class="meta">Brak zmian zakresu.</span></div>`
+    return cards.map(c=>{ const s = CST[c.status]||{l:c.status,t:'grey'}; const decided = !!c.decision_at
+      return `<div class="card"><div class="row"><b>${esc(c.title)}</b><span class="pill ${s.t}">${s.l}</span></div>
+        ${c.description?`<div class="note">${esc(c.description)}</div>`:''}
+        <div class="meta">${money(c.price_delta_amount,c.currency)} · ${term(c.term_impact_days)}</div>
+        ${decided?'':`<div class="acts"><button class="btn btn-g" onclick="_zp.decide('${esc(c.id)}','accept')">Akceptuję</button><button class="btn btn-o" onclick="_zp.decide('${esc(c.id)}','question')">Mam pytanie</button><button class="btn btn-r" onclick="_zp.decide('${esc(c.id)}','decline')">Odmawiam</button></div>`}</div>` }).join('')
+  }
+  function viewMaterialy(){
+    const m = D.materials || []
+    if(!m.length) return `<div class="card"><span class="meta">Brak udostępnionych materiałów.</span></div>`
+    return `<div class="card">${m.map(x=>`<div class="row" style="padding:6px 0;border-top:1px solid var(--line)"><span>${esc(x.name)}</span><span class="meta">${MST[x.status]||''}</span></div>`).join('')}</div>`
+  }
+  function viewRaport(){
+    const st=D.timeline||[], cards=D.cards||[], m=D.materials||[], sc=D.scope||[]
+    const acc = cards.filter(c=>c.status==='accepted').reduce((s,c)=>s+Number(c.price_delta_amount||0),0)
+    return `<div class="card">
+      <div class="row" style="padding:6px 0"><span class="meta">Pozycje zakresu</span><b>${sc.length}</b></div>
+      <div class="row" style="padding:6px 0;border-top:1px solid var(--line)"><span class="meta">Wpisy postępu</span><b>${st.length}</b></div>
+      <div class="row" style="padding:6px 0;border-top:1px solid var(--line)"><span class="meta">Zmiany zakresu</span><b>${cards.length}</b></div>
+      <div class="row" style="padding:6px 0;border-top:1px solid var(--line)"><span class="meta">Zaakceptowane dopłaty</span><b>${money(acc,'PLN')}</b></div>
+      <div class="row" style="padding:6px 0;border-top:1px solid var(--line)"><span class="meta">Materiały</span><b>${m.length}</b></div>
+    </div><div class="acts"><button class="btn btn-o" onclick="window.print()">Drukuj / zapisz PDF</button></div>`
+  }
+  function render(){
+    if(!D) return
+    const views = { zakres:viewZakres, postep:viewPostep, zmiany:viewZmiany, materialy:viewMaterialy, raport:viewRaport }
+    root.innerHTML = header() + tabsBar() + (views[tab]||viewZakres)()
   }
   async function load(){
     if(!token) return msg('Nieprawidłowy adres.')
     try{ const r = await fetch(FUNCTION_URL + '?p=' + encodeURIComponent(token)); const d = await r.json()
       if(!d.ok) return msg('Link wygasł lub jest nieaktywny. Poproś wykonawcę o nowy.')
-      render(d)
+      D = d; render()
     }catch(e){ msg('Brak połączenia. Sprawdź internet i odśwież.') }
   }
   load()
